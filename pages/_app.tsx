@@ -8,31 +8,21 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div className="m-auto max-w-[80%] bg-neutral-800 w-[80%] max-h-14 h-14 rounded-md flex items-center justify-between px-2">
         <div>
           <p className="text-gray-400 hover:text-white">
-            <Link href="/">
-              <a>Happy Quiz</a>
-            </Link>
+            <Link href="/">Happy Quiz</Link>
           </p>
         </div>
         <div className="flex gap-10">
           <p className="text-gray-400 hover:text-white">
-            <Link href="/dashboard">
-              <a>Dashboard</a>
-            </Link>
+            <Link href="/dashboard">Dashboard</Link>
           </p>
           <p className="text-gray-400 hover:text-white">
-            <Link href="/quiz">
-              <a>Quiz</a>
-            </Link>
+            <Link href="/quiz">Quiz</Link>
           </p>
           <p className="text-gray-400 hover:text-white">
-            <Link href="/users">
-              <a>Users</a>
-            </Link>
+            <Link href="/users">Users</Link>
           </p>
           <p className="text-gray-400 hover:text-white">
-            <Link href="/login">
-              <a>Login/Logout</a>
-            </Link>
+            <Link href="/login">Login/Logout</Link>
           </p>
         </div>
       </div>
