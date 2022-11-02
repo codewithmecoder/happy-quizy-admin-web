@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const login = () => {
+const Login = () => {
   const [showHidePassword, setShowHidePassword] = useState(true);
   return (
     <div className="max-w-[80%] w-[80%] m-auto items-center justify-center flex flex-col">
@@ -44,4 +44,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;
