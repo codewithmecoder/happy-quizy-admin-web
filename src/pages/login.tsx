@@ -3,13 +3,19 @@ import { useState } from 'react';
 
 const Login = () => {
   const [showHidePassword, setShowHidePassword] = useState(true);
+  const [errorObject, setErrorObject] = useState({});
+
+  const loginHandler = (e: any) => {
+    console.log(e);
+  };
   return (
     <div className="max-w-[80%] w-[80%] m-auto items-center justify-center flex flex-col">
       <Image
         src="/assets/images/welcome.webp"
         alt="Picture of the author"
-        width={500}
-        height={500}
+        width={400}
+        height={200}
+        priority
       />
       <div className="flex w-full items-center justify-center h-20">
         <p className="font-bold text-2xl text-slate-50">To Happy Quiz</p>
@@ -24,6 +30,7 @@ const Login = () => {
             className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-900 bg-slate-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus:outline-none"
             placeholder="username"
           />
+          <p className="text-red-600">hello error</p>
         </div>
 
         <div className="w-full">
@@ -46,6 +53,7 @@ const Login = () => {
         </div>
         <div className="flex items-center justify-center w-full mt-5">
           <button
+            onClick={loginHandler}
             type="button"
             className="w-full md:w-[50%] inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
           >
