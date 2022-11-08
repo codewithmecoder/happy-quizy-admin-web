@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div className="m-auto max-w-[80%] lg:max-w-[60%] bg-neutral-800 w-[80%] max-h-14 h-14 rounded-md flex items-center justify-between px-2">
         <div>
           <p className="text-gray-400 hover:text-white">
-            <Link href="/">Happy Quiz</Link>
+            <Link href="/">Happy Quizy</Link>
           </p>
         </div>
         <div className="hidden md:flex gap-10">
