@@ -1,10 +1,9 @@
-import axios from 'axios';
+import { axiosInstance } from './axiosBase';
 
 const fetcher = async <T>(url: string, headers = {}): Promise<T | null> => {
   try {
-    const { data } = await axios.get<T>(url, {
+    const { data } = await axiosInstance.get<T>(url, {
       headers,
-      withCredentials: true,
     });
 
     return data;

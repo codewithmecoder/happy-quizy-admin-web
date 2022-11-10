@@ -1,20 +1,14 @@
+import { useMutation } from '@tanstack/react-query';
 import Head from 'next/head';
 import Link from 'next/link';
+import Router from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import Checkbox from '../components/Checkbox';
 import InputForm from '../components/InputForm';
 import PrimaryButton from '../components/PrimaryButton';
 import Welcome from '../components/Welcome';
-
-interface RegisterInterface {
-  username: string;
-  displayName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  photo: string;
-  isAdmin: boolean;
-}
+import { RegisterInterface } from '../models/auth.model';
+import { registerUser } from '../services/auth.service';
 
 const Register = () => {
   const initialValues: RegisterInterface = {
@@ -37,9 +31,25 @@ const Register = () => {
         e.target.type === 'checkbox' ? e.target.checked : e.target.value,
     });
   };
+
+  const mutation = useMutation(registerUser, {
+    onSuccess: () => {
+      Router.push('/login');
+    },
+  });
+
   const submitHadler = (e: any) => {
     e.preventDefault();
-    console.log(registerValues);
+    const { username, displayName, email, phoneNumber, password, isAdmin } =
+      registerValues;
+    mutation.mutate({
+      username,
+      displayName,
+      email,
+      phoneNumber,
+      password,
+      isAdmin,
+    } as any);
   };
   return (
     <div className="max-w-[80%] w-[80%] m-auto items-center justify-center flex flex-col">
@@ -98,7 +108,11 @@ const Register = () => {
         />
         <Checkbox onChange={onchangeHandler} name="isAdmin" />
         <div className="flex items-center justify-center w-full mt-5">
-          <PrimaryButton type="submit" text="Register" />
+          <PrimaryButton
+            type="submit"
+            text="Register"
+            isLoading={mutation.isLoading}
+          />
         </div>
       </form>
       <div className="flex items-center justify-center w-full mt-5">
