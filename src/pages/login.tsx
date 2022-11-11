@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import Router from 'next/router';
 import { ChangeEvent, useState } from 'react';
@@ -6,9 +7,11 @@ import InputForm from '../components/InputForm';
 import InputFormPasswordGroup from '../components/InputFormPasswordGroup';
 import PrimaryButton from '../components/PrimaryButton';
 import Welcome from '../components/Welcome';
+import { MessageResponseModel } from '../models/messageResponse.model';
 import { loginUser } from '../services/auth.service';
 
 const Login = () => {
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
   const [showHidePassword, setShowHidePassword] = useState(true);
   const [loginValues, setLoginValues] = useState({
     username: '',
@@ -24,8 +27,17 @@ const Login = () => {
   };
 
   const mutation = useMutation(loginUser, {
-    onSuccess: () => {
-      Router.push('/');
+    onSuccess: (e) => {
+      if (e.data?.data?.user?.isAdmin) {
+        setLoginErrorMessage('');
+        Router.push('/');
+      } else {
+        setLoginErrorMessage('Only admin user can login to this!');
+      }
+    },
+    onError(error: AxiosError) {
+      const data = error.response?.data as MessageResponseModel;
+      setLoginErrorMessage(data.data.message);
     },
   });
 
@@ -55,9 +67,10 @@ const Login = () => {
           setShowHidePassword={setShowHidePassword}
           showHidePassword={showHidePassword}
           errorMessage="Password cannot be empty!"
-          pattern="^[A-Za-z0-9]{1,900000}$"
+          pattern="^^(?!\s*$).+"
           onChange={onchangeHandler}
         />
+        <p className="text-red-500">{loginErrorMessage}</p>
         <div className="flex items-center justify-center w-full mt-5">
           <PrimaryButton type="submit" text="Login" />
         </div>

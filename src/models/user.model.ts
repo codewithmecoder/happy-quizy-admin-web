@@ -7,3 +7,8 @@ export type CurrentUserLogin = {
   iat: number;
   exp: number;
 };
+
+export type CurrentUserResponse = {
+  data: CurrentUserLogin;
+  success: boolean;
+};

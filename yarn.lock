@@ -215,11 +215,6 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@heroicons/react@^2.0.13":
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.13.tgz#9b1cc54ff77d6625c9565efdce0054a4bcd9074c"
-  integrity sha512-iSN5XwmagrnirWlYEWNPdCDj9aRYVD/lnK3JlsC9/+fqGF80k8C7rl+1HCvBX0dBoagKqOFBs6fMhJJ1hOg1EQ==
-
 "@humanwhocodes/config-array@^0.11.6":
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.7.tgz#38aec044c6c828f6ed51d5d7ae3d9b9faf6dbb0f"
@@ -2143,6 +2138,18 @@ minimist@^1.2.0, minimist@^1.2.6:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
   integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
 
+moment-timezone@^0.5.38:
+  version "0.5.38"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.38.tgz#9674a5397b8be7c13de820fd387d8afa0f725aad"
+  integrity sha512-nMIrzGah4+oYZPflDvLZUgoVUO4fvAqHstvG3xAUnMolWncuAiLDWNnJZj6EwJGMGfb1ZcuTFE6GI3hNOVWI/Q==
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0", moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -2536,10 +2543,20 @@ react-dom@18.1.0:
     loose-envify "^1.1.0"
     scheduler "^0.22.0"
 
+react-icons@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.6.0.tgz#f83eda179af5d02c047449a20b702c858653d397"
+  integrity sha512-rR/L9m9340yO8yv1QT1QurxWQvWpbNHqVX0fzMln2HEb9TEIrQRGsqiNFQfiv9/JEUbyHmHPlNTB2LWm2Ttz0g==
+
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-moment@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-moment/-/react-moment-1.1.2.tgz#a9b157c58ddd226a2f746e5ca43415b24a17b6af"
+  integrity sha512-lfb+shYXI2tXlQrNUpNr05/1D/kzFj8Isbfp89DQrpZk0fs2JIAnLHWETR0hQS9zvtzwLWlVv0wKLffbue5HoA==
 
 react@18.1.0:
   version "18.1.0"

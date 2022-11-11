@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import Checkbox from '../components/Checkbox';
 import InputForm from '../components/InputForm';
 import PrimaryButton from '../components/PrimaryButton';
@@ -38,7 +38,7 @@ const Register = () => {
     },
   });
 
-  const submitHadler = (e: any) => {
+  const submitHadler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { username, displayName, email, phoneNumber, password, isAdmin } =
       registerValues;
@@ -97,6 +97,7 @@ const Register = () => {
           onChange={onchangeHandler}
           errorMessage="Password should be 8-20 characters and include at least 1 letter, 1 number and 1 special character!"
           pattern={`^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$`}
+          type="password"
         />
         <InputForm
           label="Confirm Password"
@@ -105,6 +106,7 @@ const Register = () => {
           errorMessage="Passwords don't match!"
           pattern={registerValues.password}
           required={true}
+          type="password"
         />
         <Checkbox onChange={onchangeHandler} name="isAdmin" />
         <div className="flex items-center justify-center w-full mt-5">

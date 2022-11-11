@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="bg-zinc-800 min-h-screen min-w-full">
-        <Navbar />
+        <Navbar userData={pageProps.userData} />
         <Component {...pageProps} />
       </div>
     </QueryClientProvider>

@@ -7,3 +7,7 @@ export const registerUser = (newUser: void) => {
 export const loginUser = (cred: void) => {
   return axiosInstance.post('/api/v1/auth/login', cred);
 };
+
+export const logoutUser = () => {
+  return axiosInstance.post('/api/v1/auth/logout');
+};

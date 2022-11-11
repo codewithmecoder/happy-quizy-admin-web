@@ -10,6 +10,7 @@ interface Props {
   errorMessage?: string;
   pattern?: string;
   required?: boolean;
+  value?: string;
 }
 
 const InputForm = ({
@@ -22,6 +23,7 @@ const InputForm = ({
   errorMessage,
   pattern,
   required,
+  value,
 }: Props) => {
   const [focused, setFocused] = useState(false);
   const handleFocus = (e: any) => {
@@ -35,6 +37,7 @@ const InputForm = ({
       <input
         className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-900 bg-slate-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus:outline-none"
         placeholder={placeholder}
+        value={value}
         type={type}
         autoComplete="off"
         name={name}
