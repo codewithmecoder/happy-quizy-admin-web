@@ -26,7 +26,7 @@ const InputFormPasswordGroup = ({
   required,
 }: Props) => {
   const [focused, setFocused] = useState(false);
-  const handleFocus = (e: any) => {
+  const handleFocus = () => {
     setFocused(true);
   };
   return (

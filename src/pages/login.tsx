@@ -7,6 +7,7 @@ import InputForm from '../components/InputForm';
 import InputFormPasswordGroup from '../components/InputFormPasswordGroup';
 import PrimaryButton from '../components/PrimaryButton';
 import Welcome from '../components/Welcome';
+import { BaseResponse } from '../models/baseResponse.model';
 import { MessageResponseModel } from '../models/messageResponse.model';
 import { loginUser } from '../services/auth.service';
 
@@ -36,7 +37,7 @@ const Login = () => {
       }
     },
     onError(error: AxiosError) {
-      const data = error.response?.data as MessageResponseModel;
+      const data = error.response?.data as BaseResponse<MessageResponseModel>;
       setLoginErrorMessage(data.data.message);
     },
   });
@@ -76,7 +77,7 @@ const Login = () => {
         </div>
       </form>
       <div className="flex items-center justify-center w-full mt-5">
-        <p className="text-white">Don't have an account yet ?</p>
+        <p className="text-white">{`Don't have an account yet ?`}</p>
         <div className="w-3"></div>
         <Link href="/register">
           <span className="text-lg text-blue-700 font-bold">Register</span>

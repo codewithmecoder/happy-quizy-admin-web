@@ -62,9 +62,6 @@ const TypeQuestion = () => {
           label="Name Type Question"
           name="type"
           onChange={onchangeHandler}
-          // errorMessage="Name Type Question should be 3-16 characters and shouldn't include any special character!"
-          // pattern="^[A-Za-z0-9]{3,16}$"
-          // required={true}
           value={typeQuestionValues.type}
         />
         <div className="flex items-center justify-center w-full mt-5">
@@ -99,13 +96,19 @@ const TypeQuestion = () => {
                     <td className="flex">
                       <BsTrash
                         onClick={() =>
-                          console.log(`Delete Type Question ID: ${typeQ.id}`)
+                          console.log(
+                            `Delete Type Question ID: ${typeQ.id}`,
+                            typeQ
+                          )
                         }
                         className="w-7 h-7 text-red-600 cursor-pointer"
                       />
                       <BiEdit
                         onClick={() =>
-                          console.log(`Delete Type Question ID: ${typeQ.id}`)
+                          console.log(
+                            `Delete Type Question ID: ${typeQ.id}`,
+                            typeQ
+                          )
                         }
                         className="w-7 h-7 text-yellow-500 cursor-pointer"
                       />
