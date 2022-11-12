@@ -52,7 +52,7 @@ const Register = () => {
     } as any);
   };
   return (
-    <div className="max-w-[80%] w-[80%] m-auto items-center justify-center flex flex-col">
+    <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto items-center justify-center flex flex-col">
       <MyHead title="Happy Quizy - Register" />
       <Welcome />
       <form

@@ -22,7 +22,7 @@ const Navbar: NextPage<{ userData: CurrentUserResponse }> = ({ userData }) => {
       Router.push('/login');
   }, [userData]);
   return (
-    <div className="m-auto max-w-[80%] lg:max-w-[60%] bg-neutral-800 w-[80%] max-h-14 h-14 rounded-md flex items-center justify-between px-2">
+    <div className="m-auto md:max-w-[80%] lg:max-w-[60%] bg-neutral-800 w-[100%] max-h-14 h-14 rounded-md flex items-center justify-between px-2">
       <div>
         <p className="text-gray-400 hover:text-white">
           <Link href="/">Happy Quizy</Link>

@@ -2,12 +2,12 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
-import { BsBackspace, BsTrash } from 'react-icons/bs';
+import { BsTrash } from 'react-icons/bs';
 import Moment from 'react-moment';
 import { v4 } from 'uuid';
+import BackButton from '../components/BackButton';
 import DangerButton from '../components/DangerButton';
 import InputForm from '../components/InputForm';
 import Loading from '../components/Loading';
@@ -18,7 +18,7 @@ import { TypeQuestionModel } from '../models/typeQuestion.model';
 import {
   createTypeQuestion,
   deleteTypeQuestion,
-  fetchTypeQuestions,
+  fetchOnlyTypeQuestions,
   updateTypeQuestion,
 } from '../services/typeQuestion.service';
 import { Constants } from '../utils/constants';
@@ -93,7 +93,7 @@ const TypeQuestion = () => {
   };
   const { data, isError, isLoading, isSuccess, refetch } = useQuery(
     [Constants.queries.typeQuestion],
-    fetchTypeQuestions
+    fetchOnlyTypeQuestions
   );
 
   const uploadFile = async (imageUpload: FileList | null | undefined) => {
@@ -106,16 +106,9 @@ const TypeQuestion = () => {
   };
 
   return (
-    <div className="max-w-[80%] w-[80%] lg:max-w-[60%] m-auto px-5">
+    <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto px-5">
       <MyHead title="Happy Quizy - Type Questions" />
-      <div className="w-20">
-        <Link href="/quiz">
-          <div className="bg-blue-500 py-1 px-2 rounded-md w-20 flex items-center justify-center gap-2">
-            <p className="text-white">Back</p>
-            <BsBackspace className="text-white" />
-          </div>
-        </Link>
-      </div>
+      <BackButton href="/quiz" />
 
       <form
         onSubmit={submitHadler}

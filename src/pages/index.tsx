@@ -4,7 +4,7 @@ import { CurrentUserLogin } from '../models/user.model';
 import fetcher from '../utils/fetcher';
 
 const Home: NextPage<{ userData: CurrentUserLogin }> = ({ userData }) => (
-  <div className="max-w-[80%] w-[80%] lg:max-w-[60%] m-auto">
+  <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto">
     <MyHead title="Happy Quizy Admin" />
     <p>Hello My name is Happy Quiz</p>
     <div>{JSON.stringify(userData, null, 2)}</div>

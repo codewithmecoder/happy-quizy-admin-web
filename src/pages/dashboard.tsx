@@ -4,7 +4,7 @@ import fetcher from '../utils/fetcher';
 
 const Dashboard = () => {
   return (
-    <div className="max-w-[80%] w-[80%] lg:max-w-[60%] m-auto">
+    <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto">
       <MyHead title="Dashbaord" />
       <div className="text-lg text-white font-bold">Dashbaord</div>
     </div>

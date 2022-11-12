@@ -17,6 +17,12 @@ export const fetchTypeQuestions = () => {
   );
 };
 
+export const fetchOnlyTypeQuestions = () => {
+  return fetcher<BaseResponse<TypeQuestionModel[] | MessageResponseModel>>(
+    '/api/v1/typeQuestion/onlyTypeQuestion'
+  );
+};
+
 export const updateTypeQuestion = (
   typeQuestionUpdate: TypeQuestionUpdateModel
 ) => {
