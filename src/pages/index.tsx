@@ -1,14 +1,11 @@
 import { GetServerSideProps, NextPage } from 'next';
-import Head from 'next/head';
+import MyHead from '../components/MyHead';
 import { CurrentUserLogin } from '../models/user.model';
 import fetcher from '../utils/fetcher';
 
 const Home: NextPage<{ userData: CurrentUserLogin }> = ({ userData }) => (
   <div className="max-w-[80%] w-[80%] lg:max-w-[60%] m-auto">
-    <Head>
-      <title>Happy Quizy Admin</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+    <MyHead title="Happy Quizy Admin" />
     <p>Hello My name is Happy Quiz</p>
     <div>{JSON.stringify(userData, null, 2)}</div>
   </div>

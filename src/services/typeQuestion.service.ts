@@ -1,6 +1,9 @@
 import { BaseResponse } from '../models/baseResponse.model';
 import { MessageResponseModel } from '../models/messageResponse.model';
-import { TypeQuestionModel } from '../models/typeQuestion.model';
+import {
+  TypeQuestionModel,
+  TypeQuestionUpdateModel,
+} from '../models/typeQuestion.model';
 import { axiosInstance } from '../utils/axiosBase';
 import fetcher from '../utils/fetcher';
 
@@ -14,6 +17,15 @@ export const fetchTypeQuestions = () => {
   );
 };
 
-export const updateTypeQuestion = (id: number) => {
-  return axiosInstance.put(`/api/v1/typeQuestion/${id}`);
+export const updateTypeQuestion = (
+  typeQuestionUpdate: TypeQuestionUpdateModel
+) => {
+  return axiosInstance.put(`/api/v1/typeQuestion/${typeQuestionUpdate.id}`, {
+    type: typeQuestionUpdate.type,
+    photo: typeQuestionUpdate.photo,
+  });
+};
+
+export const deleteTypeQuestion = (id: number) => {
+  return axiosInstance.delete(`/api/v1/typeQuestion/${id}`);
 };

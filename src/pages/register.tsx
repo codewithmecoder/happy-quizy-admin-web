@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Checkbox from '../components/Checkbox';
 import InputForm from '../components/InputForm';
+import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
 import Welcome from '../components/Welcome';
 import { RegisterInterface } from '../models/auth.model';
@@ -53,10 +53,7 @@ const Register = () => {
   };
   return (
     <div className="max-w-[80%] w-[80%] m-auto items-center justify-center flex flex-col">
-      <Head>
-        <title>Happy Quizy / Register User</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MyHead title="Happy Quizy - Register" />
       <Welcome />
       <form
         onSubmit={submitHadler}

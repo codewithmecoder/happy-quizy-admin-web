@@ -5,6 +5,7 @@ import Router from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import InputForm from '../components/InputForm';
 import InputFormPasswordGroup from '../components/InputFormPasswordGroup';
+import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
 import Welcome from '../components/Welcome';
 import { BaseResponse } from '../models/baseResponse.model';
@@ -37,8 +38,12 @@ const Login = () => {
       }
     },
     onError(error: AxiosError) {
-      const data = error.response?.data as BaseResponse<MessageResponseModel>;
-      setLoginErrorMessage(data.data.message);
+      if (error.code === 'ERR_NETWORK')
+        setLoginErrorMessage(error.message + '. Try again later.');
+      else {
+        const data = error.response?.data as BaseResponse<MessageResponseModel>;
+        setLoginErrorMessage(data.data.message);
+      }
     },
   });
 
@@ -48,6 +53,7 @@ const Login = () => {
   };
   return (
     <div className="max-w-[80%] w-[80%] m-auto items-center justify-center flex flex-col">
+      <MyHead title="Happy Quizy - Login" />
       <Welcome />
       <form
         onSubmit={submitHadler}

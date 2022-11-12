@@ -1,14 +1,11 @@
 import { GetServerSideProps } from 'next';
-import Head from 'next/head';
+import MyHead from '../components/MyHead';
 import fetcher from '../utils/fetcher';
 
 const Dashboard = () => {
   return (
     <div className="max-w-[80%] w-[80%] lg:max-w-[60%] m-auto">
-      <Head>
-        <title>Dashbaord</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MyHead title="Dashbaord" />
       <div className="text-lg text-white font-bold">Dashbaord</div>
     </div>
   );
