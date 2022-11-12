@@ -11,7 +11,7 @@ import { Constants } from '../utils/constants';
 import fetcher from '../utils/fetcher';
 
 const Quiz = () => {
-  const { data, isError, isLoading, isSuccess, refetch } = useQuery(
+  const { data, isError, isLoading, isSuccess } = useQuery(
     [Constants.queries.typeQuestion],
     fetchTypeQuestions
   );

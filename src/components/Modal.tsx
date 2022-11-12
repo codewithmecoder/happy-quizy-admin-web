@@ -1,7 +1,8 @@
 import { MouseEventHandler } from 'react';
 
 interface Props {
-  child: JSX.Element;
+  // child: JSX.Element;
+  child: any;
   width?: string;
   height?: string;
   backDropOpacity?: string;

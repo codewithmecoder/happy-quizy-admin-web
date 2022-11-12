@@ -258,7 +258,7 @@ const TypeQuestion = () => {
           <>
             <div className="flex items-center justify-center p-3">
               <p className="text-md">
-                Are you sure want to delete '{deleteModalData?.type}'
+                Are you sure want to delete {`"${deleteModalData?.type}"`}
               </p>
             </div>
             <div className="flex gap-5 px-4">
