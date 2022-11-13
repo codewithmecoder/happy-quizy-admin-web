@@ -6,8 +6,8 @@ export type QuestionModel = {
   content: string;
   answerQuestions: AnswerQuestionModel[];
   typeQuestion: TypeQuestionModel;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   typeQuestionId: number;
 };
 

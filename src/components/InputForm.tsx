@@ -20,7 +20,6 @@ const InputForm = ({
   label,
   type,
   placeholder,
-  isRequired = true,
   name,
   onChange,
   errorMessage,
@@ -38,7 +37,7 @@ const InputForm = ({
   return (
     <div className="w-full">
       <label htmlFor="" className="form-label inline-block mb-2 text-white">
-        {label} <span className="text-red-600">{isRequired ? '*' : ''}</span>
+        {label} <span className="text-red-600">{required ? '*' : ''}</span>
       </label>
       <input
         className={`${className} form-control block w-full px-3 py-1.5 text-base font-normal text-gray-900 bg-slate-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus:outline-none`}
