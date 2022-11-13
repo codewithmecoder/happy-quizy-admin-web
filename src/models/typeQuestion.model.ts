@@ -5,8 +5,8 @@ export type TypeQuestionModel = {
   type: string;
   photo: null | string;
   questions: QuestionModel[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type TypeQuestionUpdateModel = {
