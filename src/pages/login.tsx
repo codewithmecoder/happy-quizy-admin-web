@@ -23,8 +23,7 @@ const Login = () => {
   const onchangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginValues({
       ...loginValues,
-      [e.target.name]:
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 

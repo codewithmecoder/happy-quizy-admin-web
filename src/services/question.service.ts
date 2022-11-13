@@ -6,12 +6,6 @@ export const createQuestion = (newQuestion: void) => {
 };
 
 export const getQuestionByTypeQuestion = async (id: number) => {
-  // return useQuery<
-  //   BaseResponse<QuestionModel[] | MessageResponseModel>,
-  //   AxiosError
-  // >([Constants.queries.question], () =>
-
-  // );
   const { data } = await fetcher<any>(`/api/v1/question/byType/${id}`);
   return data;
 };

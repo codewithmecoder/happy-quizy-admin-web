@@ -105,7 +105,7 @@ const Register = () => {
           required={true}
           type="password"
         />
-        <Checkbox onChange={onchangeHandler} name="isAdmin" />
+        <Checkbox label="Admin" onChange={onchangeHandler} name="isAdmin" />
         <div className="flex items-center justify-center w-full mt-5">
           <PrimaryButton
             type="submit"

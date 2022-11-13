@@ -3,8 +3,9 @@ import { ChangeEventHandler } from 'react';
 interface Props {
   onChange?: ChangeEventHandler<HTMLInputElement>;
   name: string;
+  label: string;
 }
-const Checkbox = ({ onChange, name }: Props) => {
+const Checkbox = ({ label, onChange, name }: Props) => {
   return (
     <div className="flex items-center">
       <input
@@ -18,7 +19,7 @@ const Checkbox = ({ onChange, name }: Props) => {
         htmlFor="checked-checkbox"
         className="ml-2 text-sm font-medium text-white dark:text-gray-300"
       >
-        Admin
+        {label}
       </label>
     </div>
   );
