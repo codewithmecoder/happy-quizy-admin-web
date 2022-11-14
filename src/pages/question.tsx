@@ -28,14 +28,14 @@ interface TypeQuestionError {
   typeQuestion: string | null;
 }
 
-interface SelectType {
-  label: string;
-  value: number;
-}
-const initSeleteType: SelectType = {
-  label: '',
-  value: 0,
-};
+// interface SelectType {
+//   label: string;
+//   value: number;
+// }
+// const initSeleteType: SelectType = {
+//   label: '',
+//   value: 0,
+// };
 const initialTpyeQuestion: TypeQuestionModel = {
   id: 0,
   type: '',
@@ -78,10 +78,7 @@ const Question = () => {
   });
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedOptionId, setSelectedOptionId] = useState(0);
   const [questionData, setQuestionData] = useState<QuestionModel[]>([]);
-  // const [selectedOption, setSelectedOption] =
-  //   useState<SingleValue<SelectType>>();
 
   const mutation = useMutation(createQuestion, {
     onSuccess: () => {
@@ -190,7 +187,6 @@ const Question = () => {
           id=""
           className="my-2 w-full form-control block px-3 py-1.5 text-base font-normal text-gray-900 bg-slate-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus:outline-none"
           onChange={async (e) => {
-            setSelectedOptionId(parseInt(e.target.value));
             let qQuery = await getQuestionByTypeQuestion(
               parseInt(e.target.value)
             );

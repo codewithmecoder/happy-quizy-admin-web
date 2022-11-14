@@ -24,8 +24,10 @@ const Navbar: NextPage<{ userData: CurrentUserResponse }> = ({ userData }) => {
   return (
     <div className="m-auto md:max-w-[80%] lg:max-w-[60%] bg-neutral-800 w-[100%] max-h-14 h-14 rounded-md flex items-center justify-between px-2">
       <div>
-        <p className="text-gray-400 hover:text-white">
-          <Link href="/">Happy Quizy</Link>
+        <p className="text-gray-300 hover:text-white">
+          <Link href="/">
+            <b>Happy Quizy</b>
+          </Link>
         </p>
       </div>
       <div className="hidden md:flex gap-10">
