@@ -6,11 +6,11 @@ import Router from 'next/router';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
 import Checkbox from '../components/Checkbox';
-import InputForm from '../components/InputForm';
 import Loading from '../components/Loading';
 import Modal from '../components/Modal';
 import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
+import TextAreaForm from '../components/TextAreaForm';
 import {
   AnswerQuestionModel,
   ErrorAnswerModel,
@@ -96,7 +96,14 @@ const Quiz = () => {
       typeQuestionId,
     } as any);
   };
-  const onchangeAnswerHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const onchangeAnswerHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setCreateAnswerValues({
+      ...createAnswerValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onChangeCheckboxHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setCreateAnswerValues({
       ...createAnswerValues,
       [e.target.name]:
@@ -232,42 +239,22 @@ const Quiz = () => {
               action=""
               className="w-[100%] lg:w-[60%] h-[60%] bg-neutral-800 items-start justify-start flex flex-col pt-5 gap-4 m-auto"
             >
-              <InputForm
+              <TextAreaForm
                 label="Answer"
                 name="answer"
                 onChange={onchangeAnswerHandler}
                 value={createAnswerValues.answer ?? ''}
                 required={true}
-                pattern={`^(?!\s*$).+`}
                 errorMessage="Answer cannot be empty!"
               />
               <Checkbox
                 label="Correct Answer"
-                onChange={onchangeAnswerHandler}
+                onChange={onChangeCheckboxHandler}
                 name="iscorrect"
               />
               {createAsnwerError && (
                 <li className="text-red-500">{createAsnwerError}</li>
               )}
-              {/* <InputForm
-                label="Type Question"
-                name="typeQuestionId"
-                readonly={true}
-                className="cursor-pointer"
-                onClick={() => {
-                  if (!tqQuery.data) tqQuery.refetch();
-                  setTypeQuestionModal(true);
-                }}
-                value={typeQuestion.type ?? ''}
-                required={true}
-              />
-              {errorObject.typeQuestion && (
-                <span className="text-red-500">
-                  <li>{errorObject.typeQuestion}</li>
-                </span>
-              )}
-              {error && <span className="text-red-400">{error}</span>} */}
-
               <div className="flex items-center justify-center w-full mt-5">
                 <PrimaryButton
                   type="submit"

@@ -7,6 +7,7 @@ const Dashboard = () => {
     <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto">
       <MyHead title="Dashbaord" />
       <div className="text-lg text-white font-bold">Dashbaord</div>
+      {/* <RichTextEditor /> */}
     </div>
   );
 };
