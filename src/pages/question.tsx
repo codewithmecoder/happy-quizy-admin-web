@@ -13,11 +13,19 @@ import Loading from '../components/Loading';
 import Modal from '../components/Modal';
 import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
-import { CreateQuestionModel, QuestionModel } from '../models/question.model';
+import { BaseResponse } from '../models/baseResponse.model';
+import { MessageResponseModel } from '../models/messageResponse.model';
+import {
+  CreateQuestionModel,
+  QuestionModel,
+  UpdateQuestionModel,
+} from '../models/question.model';
 import { TypeQuestionModel } from '../models/typeQuestion.model';
 import {
   createQuestion,
+  deleteQuestion,
   getQuestionByTypeQuestion,
+  updateQuestion,
 } from '../services/question.service';
 import { fetchOnlyTypeQuestions } from '../services/typeQuestion.service';
 import { Constants } from '../utils/constants';
@@ -36,13 +44,18 @@ interface TypeQuestionError {
 //   label: '',
 //   value: 0,
 // };
-const initialTpyeQuestion: TypeQuestionModel = {
+const initialTypeQuestion: TypeQuestionModel = {
   id: 0,
   type: '',
   photo: null,
   questions: [],
 };
 const initialQuestion: CreateQuestionModel = {
+  content: null,
+  typeQuestionId: 0,
+};
+const initUpdateTypeQuestion: UpdateQuestionModel = {
+  id: 0,
   content: null,
   typeQuestionId: 0,
 };
@@ -67,9 +80,10 @@ const Question = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteModalData, setDeleteModalData] =
     useState<QuestionModel>(initQuestionModel);
-  const [updateId, setUpdateId] = useState<number>(0);
+  const [updateQuestionValue, setUpdateQuestionValue] =
+    useState<UpdateQuestionModel>(initUpdateTypeQuestion);
   const [typeQuestion, setTypeQuestion] =
-    useState<TypeQuestionModel>(initialTpyeQuestion);
+    useState<TypeQuestionModel>(initialTypeQuestion);
   const [questionValues, setQuestionValues] =
     useState<CreateQuestionModel>(initialQuestion);
   const [errorObject, setErrorObject] = useState<TypeQuestionError>({
@@ -77,19 +91,69 @@ const Question = () => {
     typeQuestion: null,
   });
   const [error, setError] = useState<string | null>(null);
+  const [errorDelete, setErrorDelete] = useState<string | null>(null);
 
   const [questionData, setQuestionData] = useState<QuestionModel[]>([]);
 
   const mutation = useMutation(createQuestion, {
-    onSuccess: () => {
+    onSuccess: async (data) => {
+      const question = data.data?.data;
+      let qQuery = await getQuestionByTypeQuestion(
+        question?.typeQuestionId ?? 0
+      );
+      setQuestionData(qQuery);
+      const select: any = document.getElementById('selectTypeQuestion');
+      if (select) {
+        select.value = question?.typeQuestionId;
+      }
       setQuestionValues(initialQuestion);
-      setTypeQuestion(initialTpyeQuestion);
+      setTypeQuestion(initialTypeQuestion);
       setError(null);
     },
     onError: (e: AxiosError) => {
       setError(e.message);
     },
   });
+
+  const deleteMutation = useMutation(deleteQuestion, {
+    onSuccess: async () => {
+      let qQuery = await getQuestionByTypeQuestion(
+        deleteModalData.typeQuestionId
+      );
+      setQuestionData(qQuery);
+      setQuestionValues(initialQuestion);
+      setTypeQuestion(initialTypeQuestion);
+      setShowDeleteModal(false);
+      setErrorDelete(null);
+    },
+    onError: (e: AxiosError) => {
+      if (e.code === 'ERR_NETWORK') {
+        setErrorDelete(e.message);
+      } else {
+        setErrorDelete(
+          (e.response?.data as BaseResponse<MessageResponseModel>)?.data.message
+        );
+      }
+    },
+  });
+  //deleteQuestion
+
+  const updateMutation = useMutation(updateQuestion, {
+    onSuccess: async (data) => {
+      const question = data.data?.data;
+      let qQuery = await getQuestionByTypeQuestion(
+        question?.typeQuestionId ?? 0
+      );
+      setQuestionData(qQuery);
+      setUpdateQuestionValue(initUpdateTypeQuestion);
+      setTypeQuestion(initialTypeQuestion);
+      setError(null);
+    },
+    onError: (e: AxiosError) => {
+      setError(e.message);
+    },
+  });
+
   const validate = (value: CreateQuestionModel) => {
     const error: TypeQuestionError = {
       content: null,
@@ -100,22 +164,35 @@ const Question = () => {
     return error;
   };
   const onchangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuestionValues({ ...questionValues, [e.target.name]: e.target.value });
+    if (updateQuestionValue.id > 0) {
+      setUpdateQuestionValue({
+        ...updateQuestionValue,
+        [e.target.name]: e.target.value,
+      });
+    } else {
+      setQuestionValues({ ...questionValues, [e.target.name]: e.target.value });
+    }
   };
   const submitHadler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    questionValues.typeQuestionId = typeQuestion.id;
-    setErrorObject(validate(questionValues));
-    if (errorObject.content || errorObject.typeQuestion) return;
-    const { content, typeQuestionId } = questionValues;
-    mutation.mutate({ content, typeQuestionId } as any);
+    if (updateQuestionValue.id > 0) {
+      setErrorObject(validate(updateQuestionValue));
+      if (errorObject.content || errorObject.typeQuestion) return;
+      const { content, typeQuestionId, id } = updateQuestionValue;
+      updateMutation.mutate({ content, typeQuestionId, id } as any);
+    } else {
+      questionValues.typeQuestionId = typeQuestion.id;
+      setErrorObject(validate(questionValues));
+      if (errorObject.content || errorObject.typeQuestion) return;
+      const { content, typeQuestionId } = questionValues;
+      mutation.mutate({ content, typeQuestionId } as any);
+    }
   };
 
   const tqQuery = useQuery(
     [Constants.queries.onlyTypeQuestion],
     fetchOnlyTypeQuestions
   );
-  // let qQuery = getQuestionByTypeQuestion(selectedOptionId);
 
   return (
     <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto p-5">
@@ -130,7 +207,11 @@ const Question = () => {
           label="Name Question"
           name="content"
           onChange={onchangeHandler}
-          value={questionValues.content ?? ''}
+          value={
+            updateQuestionValue.id > 0
+              ? updateQuestionValue.content ?? ''
+              : questionValues.content ?? ''
+          }
           required={true}
         />
         <span className="text-red-500">
@@ -142,6 +223,7 @@ const Question = () => {
           readonly={true}
           className="cursor-pointer"
           onClick={() => {
+            if (updateQuestionValue.id > 0) return;
             if (!tqQuery.data) tqQuery.refetch();
             setTypeQuestionModal(true);
           }}
@@ -158,7 +240,9 @@ const Question = () => {
         <div className="flex items-center justify-center w-full mt-5">
           <PrimaryButton
             type="submit"
-            text={updateId > 0 ? 'Update Question' : 'Add Question'}
+            text={
+              updateQuestionValue.id > 0 ? 'Update Question' : 'Add Question'
+            }
             isLoading={mutation.isLoading}
           />
         </div>
@@ -184,7 +268,7 @@ const Question = () => {
       {tqQuery.isSuccess && (
         <select
           name=""
-          id=""
+          id="selectTypeQuestion"
           className="my-2 w-full form-control block px-3 py-1.5 text-base font-normal text-gray-900 bg-slate-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus:outline-none"
           onChange={async (e) => {
             let qQuery = await getQuestionByTypeQuestion(
@@ -207,7 +291,7 @@ const Question = () => {
         {/* {qQuery.isError && <p>Error fetching data</p>}
         {qQuery.isLoading && <Loading size="medium" />} */}
         {/* {questionData.length > 0 && ( */}
-        <div className="">
+        <div className="!h-[340px] overflow-y-scroll">
           <table className="table-auto w-full text-left overflow-x-scroll">
             <thead>
               <tr>
@@ -229,7 +313,7 @@ const Question = () => {
                   <td className="w-[150px]">
                     <Moment format="DD-MM-YYYY">{question.updatedAt}</Moment>
                   </td>
-                  <td className="flex w-[150px]">
+                  <td className="flex w-[60px] items-center justify-center py-2">
                     <BsTrash
                       onClick={() => {
                         setShowDeleteModal(true);
@@ -239,12 +323,8 @@ const Question = () => {
                     />
                     <BiEdit
                       onClick={() => {
-                        // setUpdateId(typeQ.id);
-                        // setTypeQuestionValues({
-                        //   ...typeQuestionValues,
-                        //   type: typeQ.type,
-                        //   photo: typeQ.photo,
-                        // });
+                        setUpdateQuestionValue(question);
+                        setTypeQuestion(question.typeQuestion);
                       }}
                       className="w-7 h-7 text-yellow-500 cursor-pointer"
                     />
@@ -257,7 +337,6 @@ const Question = () => {
         {/* )} */}
       </fieldset>
       <Modal
-        // key={deleteModalData?.id}
         child={
           <>
             <div className="p-4">
@@ -323,14 +402,15 @@ const Question = () => {
         width="80%"
       />
       <Modal
-        key={deleteModalData?.id}
         child={
           <>
             <div className="flex items-center justify-center p-3">
               <p className="text-md">
-                Are you sure want to delete {`"${deleteModalData?.content}"`}
+                Are you sure want to delete question :{' '}
+                <b>{`"${deleteModalData?.content}"`}</b>
               </p>
             </div>
+            {errorDelete && <li className="text-red-500 p-5">{errorDelete}</li>}
             <div className="flex gap-5 p-4">
               <PrimaryButton
                 text="No"
@@ -340,10 +420,8 @@ const Question = () => {
               <DangerButton
                 text="Yes"
                 type="button"
-                onClick={() => {
-                  // deleteTypeQuestion(deleteModalData?.id ?? 0);
-                  // qQuery.refetch();
-                  setShowDeleteModal(false);
+                onClick={async () => {
+                  deleteMutation.mutate(deleteModalData.id as any);
                 }}
               />
             </div>

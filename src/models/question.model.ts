@@ -16,3 +16,7 @@ export type CreateQuestionModel = {
   typeQuestionId: number;
   updatedAt?: Date;
 };
+
+export type UpdateQuestionModel = {
+  id: number;
+} & CreateQuestionModel;
