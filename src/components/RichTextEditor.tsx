@@ -1,12 +1,12 @@
 import { EditorState } from 'draft-js';
-import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then((module) => module.Editor),
-  { ssr: false }
-);
+// const Editor = dynamic(
+//   () => import('react-draft-wysiwyg').then((module) => module.Editor),
+//   { ssr: false }
+// );
 
 interface Props {
   width?: string;

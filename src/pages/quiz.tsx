@@ -11,10 +11,7 @@ import Modal from '../components/Modal';
 import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
 import TextAreaForm from '../components/TextAreaForm';
-import {
-  AnswerQuestionModel,
-  ErrorAnswerModel,
-} from '../models/answerQuestion.model';
+import { AnswerQuestionModel } from '../models/answerQuestion.model';
 import { BaseResponse } from '../models/baseResponse.model';
 import { MessageResponseModel } from '../models/messageResponse.model';
 import { QuestionModel } from '../models/question.model';
@@ -46,11 +43,11 @@ const initCreateAnswerValues: AnswerQuestionModel = {
   typeQuestionId: 0,
 };
 
-const initErrorCreateAnswer: ErrorAnswerModel = {
-  answer: null,
-  question: null,
-  typeQuestion: null,
-};
+// const initErrorCreateAnswer: ErrorAnswerModel = {
+//   answer: null,
+//   question: null,
+//   typeQuestion: null,
+// };
 
 const Quiz = () => {
   const [question, setQuestion] = useState<QuestionModel>(initQuestionModel);
