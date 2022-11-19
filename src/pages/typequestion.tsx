@@ -14,6 +14,7 @@ import Loading from '../components/Loading';
 import Modal from '../components/Modal';
 import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
+import { BaseResponse } from '../models/baseResponse.model';
 import { TypeQuestionModel } from '../models/typeQuestion.model';
 import {
   createTypeQuestion,
@@ -283,6 +284,17 @@ const TypeQuestion = () => {
 
 export default TypeQuestion;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher(`/api/v1/user`, context.req.headers);
+  const data = await fetcher<BaseResponse<object>>(
+    `/api/v1/user`,
+    context.req.headers
+  );
+  if (!data?.success) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
   return { props: { userData: data } };
 };

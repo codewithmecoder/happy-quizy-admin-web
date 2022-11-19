@@ -29,7 +29,10 @@ const Login = () => {
 
   const mutation = useMutation(loginUser, {
     onSuccess: (e) => {
+      console.log(e);
       if (e.data?.data?.user?.isAdmin) {
+        // Cookies.set('accessToken', e.data?.data?.accessToken);
+        // Cookies.set('refreshToken', e.data?.data?.refreshToken);
         setLoginErrorMessage('');
         Router.push('/');
       } else {
@@ -46,8 +49,14 @@ const Login = () => {
     },
   });
 
-  const submitHadler = (e: any) => {
+  const submitHadler = async (e: any) => {
     e.preventDefault();
+    // const res = await signIn('credentials', {
+    //   email: loginValues.username,
+    //   password: loginValues.password,
+    //   redirect: false,
+    // });
+    // console.log('res => ', res);
     mutation.mutate(loginValues as any);
   };
   return (

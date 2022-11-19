@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import MyHead from '../components/MyHead';
+import { BaseResponse } from '../models/baseResponse.model';
 import fetcher from '../utils/fetcher';
 
 const Dashboard = () => {
@@ -14,6 +15,17 @@ const Dashboard = () => {
 
 export default Dashboard;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher(`/api/v1/user`, context.req.headers);
+  const data = await fetcher<BaseResponse<object>>(
+    `/api/v1/user`,
+    context.req.headers
+  );
+  if (!data?.success) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
   return { props: { userData: data } };
 };
