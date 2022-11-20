@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import Link from 'next/link';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { ChangeEvent, useState } from 'react';
 import InputForm from '../components/InputForm';
 import InputFormPasswordGroup from '../components/InputFormPasswordGroup';
@@ -10,15 +10,19 @@ import PrimaryButton from '../components/PrimaryButton';
 import Welcome from '../components/Welcome';
 import { BaseResponse } from '../models/baseResponse.model';
 import { MessageResponseModel } from '../models/messageResponse.model';
-import { loginUser } from '../services/auth.service';
 
 const Login = () => {
+  const router = useRouter();
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
   const [showHidePassword, setShowHidePassword] = useState(true);
   const [loginValues, setLoginValues] = useState({
     username: '',
     password: '',
   });
+
+  const loginUser = (cred: void) => {
+    return axios.post('/api/auth/login', cred);
+  };
 
   const onchangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginValues({
@@ -28,6 +32,7 @@ const Login = () => {
   };
 
   const mutation = useMutation(loginUser, {
+<<<<<<< HEAD
     onSuccess: (e) => {
       console.log(e);
       const cookie = e.headers['set-cookie'];
@@ -35,8 +40,12 @@ const Login = () => {
       if (e.data?.data?.user?.isAdmin) {
         // Cookies.set('accessToken', e.data?.data?.accessToken);
         // Cookies.set('refreshToken', e.data?.data?.refreshToken);
+=======
+    onSuccess: ({ data }) => {
+      if (data.data?.user?.isAdmin) {
+>>>>>>> b5c66e3 (fix: auth)
         setLoginErrorMessage('');
-        Router.push('/');
+        router.push('/');
       } else {
         setLoginErrorMessage('Only admin user can login to this!');
       }
@@ -53,12 +62,6 @@ const Login = () => {
 
   const submitHadler = async (e: any) => {
     e.preventDefault();
-    // const res = await signIn('credentials', {
-    //   email: loginValues.username,
-    //   password: loginValues.password,
-    //   redirect: false,
-    // });
-    // console.log('res => ', res);
     mutation.mutate(loginValues as any);
   };
   return (
