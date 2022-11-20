@@ -33,6 +33,7 @@ const Login = () => {
 
   const mutation = useMutation(loginUser, {
     onSuccess: ({ data }) => {
+      console.log(data);
       if (data.data?.user?.isAdmin) {
         setLoginErrorMessage('');
         router.push('/');

@@ -10,6 +10,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const user = await loginUser(req.body);
+    console.log(user);
     const data = user.data as BaseResponse<UserTokenModel>;
     const date = new Date();
     const cookie = new Cookie(req, res, {
@@ -34,7 +35,7 @@ export default async function handler(
         )
       ),
     });
-    res.status(200).send(data);
+    res.json(data);
   } else {
     res.status(405).send({ status: 405 });
   }
