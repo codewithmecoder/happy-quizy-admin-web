@@ -16,8 +16,7 @@ export default async function handler(
       secure: process.env.NODE_ENV !== 'development',
     });
     cookie.set('accessToken', data?.data.accessToken, {
-      // maxAge: 900000, //15 mins
-      maxAge: 1000,
+      maxAge: 1800000, //15 mins
       httpOnly: true,
       path: '/',
       sameSite: 'strict',
