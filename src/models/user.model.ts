@@ -12,3 +12,14 @@ export type CurrentUserResponse = {
   data: CurrentUserLogin;
   success: boolean;
 };
+
+export type LoginUserResponse = {
+  data: UserTokenModel;
+  success: boolean;
+};
+
+export type UserTokenModel = {
+  accessToken: string;
+  refreshToken: string;
+  user: CurrentUserLogin;
+};

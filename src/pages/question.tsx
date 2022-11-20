@@ -253,7 +253,6 @@ const Question = () => {
           defaultValue={selectedOption}
           onChange={(e) => {
             setSelectedOption(e);
-            console.log(qQuery);
           }}
           options={
             tqQuery.isSuccess
