@@ -18,15 +18,17 @@ export default async function handler(
     });
     cookie.set('accessToken', data?.data.accessToken, {
       maxAge: 1800000, //15 mins
+      domain: 'https://worker-production-3a23.up.railway.app',
       httpOnly: true,
       path: '/',
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
     cookie.set('refreshToken', data?.data.refreshToken, {
       maxAge: 3.154e10, //1 year
+      domain: 'https://worker-production-3a23.up.railway.app',
       httpOnly: true,
       path: '/',
-      sameSite: 'strict',
+      sameSite: 'lax',
       expires: new Date(
         new Date().setFullYear(
           date.getFullYear() + 1,

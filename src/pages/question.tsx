@@ -437,9 +437,10 @@ const Question = () => {
 
 export default Question;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher<BaseResponse<object>>(`/api/v1/user`, {
-    cookie: context.req.headers.cookie,
-  });
+  const data = await fetcher<BaseResponse<object>>(
+    `/api/v1/user`,
+    context.req.headers
+  );
   if (!data?.success) {
     return {
       redirect: {
