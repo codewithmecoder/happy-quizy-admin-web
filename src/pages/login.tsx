@@ -33,6 +33,7 @@ const Login = () => {
 
   const mutation = useMutation(loginUser, {
 <<<<<<< HEAD
+<<<<<<< HEAD
     onSuccess: (e) => {
       console.log(e);
       const cookie = e.headers['set-cookie'];
@@ -44,6 +45,10 @@ const Login = () => {
     onSuccess: ({ data }) => {
       if (data.data?.user?.isAdmin) {
 >>>>>>> b5c66e3 (fix: auth)
+=======
+    onSuccess: ({ data }) => {
+      if (data.data?.user?.isAdmin) {
+>>>>>>> dev
         setLoginErrorMessage('');
         router.push('/');
       } else {

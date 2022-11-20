@@ -1015,7 +1015,10 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+<<<<<<< HEAD
 >>>>>>> b5c66e3 (fix: auth)
+=======
+>>>>>>> dev
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
@@ -1585,7 +1588,10 @@ convert-source-map@^1.5.0:
   integrity sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> dev
 cookies@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/cookies/-/cookies-0.8.0.tgz#1293ce4b391740a8406e3c9870e828c4b54f3f90"
@@ -3139,7 +3145,10 @@ object.values@^1.1.5, object.values@^1.1.6:
 =======
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
+<<<<<<< HEAD
 >>>>>>> b5c66e3 (fix: auth)
+=======
+>>>>>>> dev
 
 once@^1.3.0:
   version "1.4.0"
