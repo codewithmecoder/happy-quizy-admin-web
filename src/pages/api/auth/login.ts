@@ -10,7 +10,6 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const user = await loginUser(req.body);
-    console.log(user);
     const data = user.data as BaseResponse<UserTokenModel>;
     const date = new Date();
     const cookie = new Cookie(req, res, {
@@ -18,17 +17,15 @@ export default async function handler(
     });
     cookie.set('accessToken', data?.data.accessToken, {
       maxAge: 1800000, //15 mins
-      domain: 'https://worker-production-3a23.up.railway.app',
       httpOnly: true,
       path: '/',
-      sameSite: 'lax',
+      sameSite: 'strict',
     });
     cookie.set('refreshToken', data?.data.refreshToken, {
       maxAge: 3.154e10, //1 year
-      domain: 'https://worker-production-3a23.up.railway.app',
       httpOnly: true,
       path: '/',
-      sameSite: 'lax',
+      sameSite: 'strict',
       expires: new Date(
         new Date().setFullYear(
           date.getFullYear() + 1,

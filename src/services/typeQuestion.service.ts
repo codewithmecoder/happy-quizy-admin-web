@@ -1,35 +1,64 @@
+import { BaseObjectRequestModel } from '../models/baseObjectRequest.model';
 import { BaseResponse } from '../models/baseResponse.model';
 import { MessageResponseModel } from '../models/messageResponse.model';
 import {
   TypeQuestionModel,
   TypeQuestionUpdateModel,
 } from '../models/typeQuestion.model';
+import { TypeQuestionValues } from '../pages/typequestion';
 import { axiosInstance } from '../utils/axiosBase';
 import fetcher from '../utils/fetcher';
 
 export const createTypeQuestion = (typeQuestion: void) => {
-  return axiosInstance.post('/api/v1/typeQuestion', typeQuestion);
+  const obj: BaseObjectRequestModel<TypeQuestionValues> = typeQuestion as any;
+  return axiosInstance.post('/api/v1/typeQuestion', obj.data, {
+    headers: {
+      Authorization: `Bearer ${obj.headers.accessToken}`,
+      'x-refresh': obj.headers.refreshToken,
+    },
+  } as any);
 };
 
-export const fetchTypeQuestions = () => {
-  return fetcher<BaseResponse<TypeQuestionModel[] | MessageResponseModel>>(
-    '/api/v1/typeQuestion'
-  );
-};
-
-export const fetchOnlyTypeQuestions = () => {
-  return fetcher<BaseResponse<TypeQuestionModel[] | MessageResponseModel>>(
-    '/api/v1/typeQuestion/onlyTypeQuestion'
-  );
-};
-
-export const updateTypeQuestion = (
-  typeQuestionUpdate: TypeQuestionUpdateModel
+export const fetchTypeQuestions = (
+  headers: Partial<{ [key: string]: string }>
 ) => {
-  return axiosInstance.put(`/api/v1/typeQuestion/${typeQuestionUpdate.id}`, {
-    type: typeQuestionUpdate.type,
-    photo: typeQuestionUpdate.photo,
-  });
+  return fetcher<BaseResponse<TypeQuestionModel[] | MessageResponseModel>>(
+    '/api/v1/typeQuestion',
+    {
+      Authorization: `Bearer ${headers.accessToken}`,
+      'x-refresh': headers.refreshToken,
+    }
+  );
+};
+
+export const fetchOnlyTypeQuestions = (
+  headers: Partial<{ [key: string]: string }>
+) => {
+  return fetcher<BaseResponse<TypeQuestionModel[] | MessageResponseModel>>(
+    '/api/v1/typeQuestion/onlyTypeQuestion',
+    {
+      Authorization: `Bearer ${headers.accessToken}`,
+      'x-refresh': headers.refreshToken,
+    }
+  );
+};
+
+export const updateTypeQuestion = (typeQuestionUpdate: void) => {
+  const obj: BaseObjectRequestModel<TypeQuestionUpdateModel> =
+    typeQuestionUpdate as any;
+  return axiosInstance.put(
+    `/api/v1/typeQuestion/${obj.data.id}`,
+    {
+      type: obj.data.type,
+      photo: obj.data.photo,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${obj.headers.accessToken}`,
+        'x-refresh': obj.headers.refreshToken,
+      },
+    }
+  );
 };
 
 export const deleteTypeQuestion = (id: number) => {

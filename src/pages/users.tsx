@@ -14,10 +14,9 @@ const Users = () => {
 
 export default Users;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher<BaseResponse<object>>(
-    `/api/v1/user`,
-    context.req.headers
-  );
+  const data = await fetcher<BaseResponse<object>>(`/api/v1/user`, {
+    cookie: context.req.headers.cookies,
+  });
   if (!data?.success) {
     return {
       redirect: {
@@ -26,5 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  return { props: { userData: data } };
+  return {
+    props: { userData: data, cookie: context.req.headers['set-cookie'] },
+  };
 };

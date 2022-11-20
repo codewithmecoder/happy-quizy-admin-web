@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
@@ -26,12 +26,16 @@ import { Constants } from '../utils/constants';
 import fetcher from '../utils/fetcher';
 import { storage } from '../utils/firebase.config';
 
-interface TypeQuestionValues {
+export interface TypeQuestionValues {
   type: string | null;
   photo: null | string;
 }
 
-const TypeQuestion = () => {
+const TypeQuestion: NextPage<{
+  headers: Partial<{
+    [key: string]: string;
+  }>;
+}> = ({ headers }) => {
   const [deleteModalData, setDeleteModalData] = useState<TypeQuestionModel>();
   const [photo, setPhoto] = useState<FileList | null>();
   const [updateId, setUpdateId] = useState<number>(0);
@@ -45,7 +49,7 @@ const TypeQuestion = () => {
   });
 
   const mutation = useMutation(createTypeQuestion, {
-    onSuccess: () => {
+    onSuccess: (e) => {
       setTypeQuestionValues({ ...typeQuestionValues, type: '', photo: null });
       refetch();
     },
@@ -65,36 +69,51 @@ const TypeQuestion = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  let errorCount: number = 0;
   const validate = (value: TypeQuestionValues) => {
     const error: TypeQuestionValues = {
       type: null,
       photo: null,
     };
-    if (!value.photo) error.photo = 'Please choose a photo!';
-    if (!value.type) error.type = 'Name Type Question cannot be empty!';
+    if (!value.photo) {
+      error.photo = 'Please choose a photo!';
+      errorCount++;
+    }
+    if (!value.type) {
+      error.type = 'Name Type Question cannot be empty!';
+      errorCount++;
+    }
     return error;
   };
 
   const submitHadler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorObject(validate(typeQuestionValues));
-    if (errorObject.type || errorObject.photo) return;
+    if (errorCount > 0) {
+      errorCount = 0;
+      return;
+    }
     const photoUrl = await uploadFile(photo);
     updateId > 0
       ? mutationUpdate.mutate({
-          ...typeQuestionValues,
-          photo: photoUrl ? photoUrl : typeQuestionValues.photo,
-          id: updateId,
+          data: {
+            ...typeQuestionValues,
+            photo: photoUrl ? photoUrl : typeQuestionValues.photo,
+            id: updateId,
+          },
+          headers,
         } as any)
       : mutation.mutate({
-          ...typeQuestionValues,
-          photo: photoUrl,
+          data: {
+            ...typeQuestionValues,
+            photo: photoUrl,
+          },
+          headers,
         } as any);
   };
   const { data, isError, isLoading, isSuccess, refetch } = useQuery(
     [Constants.queries.typeQuestion],
-    fetchOnlyTypeQuestions
+    async () => await fetchOnlyTypeQuestions(headers)
   );
 
   const uploadFile = async (imageUpload: FileList | null | undefined) => {
@@ -284,10 +303,9 @@ const TypeQuestion = () => {
 
 export default TypeQuestion;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher<BaseResponse<object>>(
-    `/api/v1/user`,
-    context.req.headers
-  );
+  const data = await fetcher<BaseResponse<object>>(`/api/v1/user`, {
+    cookie: context.req.headers.cookie,
+  });
   if (!data?.success) {
     return {
       redirect: {
@@ -296,5 +314,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  return { props: { userData: data } };
+  return {
+    props: { userData: data, headers: context.req.cookies },
+  };
 };

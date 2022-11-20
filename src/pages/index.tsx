@@ -6,13 +6,17 @@ import fetcher from '../utils/fetcher';
 
 const Home: NextPage<{
   userData: CurrentUserLogin;
-  context: any;
-}> = ({ userData }) => {
+  headers: Partial<{
+    [key: string]: string;
+  }>;
+}> = ({ userData, headers }) => {
   return (
     <div className="md:max-w-[80%] w-[100%] lg:max-w-[60%] m-auto">
       <MyHead title="Happy Quizy Admin" />
       <p>Hello My name is Happy Quiz</p>
-      <div>{JSON.stringify(userData, null, 2)}</div>
+      <pre>{JSON.stringify(userData, null, 2)}</pre>
+      <br />
+      <pre>{JSON.stringify(headers, undefined, 2)}</pre>
     </div>
   );
 };
@@ -20,10 +24,9 @@ const Home: NextPage<{
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher<BaseResponse<object>>(
-    `/api/v1/user`,
-    context.req.headers
-  );
+  const data = await fetcher<BaseResponse<object>>(`/api/v1/user`, {
+    cookie: context.req.headers.cookie,
+  });
   if (!data?.success) {
     return {
       redirect: {
@@ -32,5 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  return { props: { userData: data } };
+  return {
+    props: { userData: data, headers: context.req.cookies },
+  };
 };

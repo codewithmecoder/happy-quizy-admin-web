@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import Router from 'next/router';
 import { ChangeEvent, FormEvent, useState } from 'react';
@@ -55,7 +55,11 @@ const initCreateAnswerValues: AnswerQuestionModel = {
 //   typeQuestion: null,
 // };
 
-const Quiz = () => {
+const Quiz: NextPage<{
+  headers: Partial<{
+    [key: string]: string;
+  }>;
+}> = ({ headers }) => {
   const [question, setQuestion] = useState<QuestionModel>(initQuestionModel);
   const [createAnswerValues, setCreateAnswerValues] =
     useState<AnswerQuestionModel>(initCreateAnswerValues);
@@ -73,7 +77,7 @@ const Quiz = () => {
 
   const { data, isError, isLoading, isSuccess, refetch } = useQuery(
     [Constants.queries.typeQuestion],
-    fetchTypeQuestions
+    async () => await fetchTypeQuestions(headers)
   );
 
   const createAnswerMutation = useMutation(createAnswer, {
@@ -130,7 +134,10 @@ const Quiz = () => {
   const submitAnswerHadler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (updateAnswer.id > 0) {
-      updateAnswerMutation.mutate(updateAnswer as any);
+      updateAnswerMutation.mutate({
+        data: updateAnswer,
+        headers: headers,
+      } as any);
       setUpdateAnswer(initCreateAnswerValues);
       setShowCreateAnswerModal(false);
     } else {
@@ -139,10 +146,13 @@ const Quiz = () => {
       const { answer, iscorrect, questionId, typeQuestionId } =
         createAnswerValues;
       createAnswerMutation.mutate({
-        answer,
-        iscorrect,
-        questionId,
-        typeQuestionId,
+        data: {
+          answer,
+          iscorrect,
+          questionId,
+          typeQuestionId,
+        },
+        headers: headers,
       } as any);
     }
   };
@@ -416,10 +426,9 @@ const Quiz = () => {
 
 export default Quiz;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await fetcher<BaseResponse<object>>(
-    `/api/v1/user`,
-    context.req.headers
-  );
+  const data = await fetcher<BaseResponse<object>>(`/api/v1/user`, {
+    cookie: context.req.headers.cookie,
+  });
   if (!data?.success) {
     return {
       redirect: {
@@ -428,5 +437,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  return { props: { userData: data } };
+  return { props: { userData: data, headers: context.req.cookies } };
 };
