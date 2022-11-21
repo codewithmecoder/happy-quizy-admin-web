@@ -30,9 +30,9 @@ const Navbar: NextPage<{ userData: CurrentUserResponse }> = ({ userData }) => {
         </p>
       </div>
       <div className="hidden md:flex gap-10">
-        <p className="text-gray-400 hover:text-white">
+        {/* <p className="text-gray-400 hover:text-white">
           <Link href="/dashboard">Dashboard</Link>
-        </p>
+        </p> */}
         <p className="text-gray-400 hover:text-white">
           <Link href="/quiz">Quiz</Link>
         </p>
@@ -67,9 +67,9 @@ const Navbar: NextPage<{ userData: CurrentUserResponse }> = ({ userData }) => {
             openMenu ? 'flex' : 'hidden'
           } flex flex-col md:hidden gap-5 absolute right-8 top-0 bg-neutral-800 p-5 rounded-md`}
         >
-          <p className="text-gray-400 hover:text-white">
+          {/* <p className="text-gray-400 hover:text-white">
             <Link href="/dashboard">Dashboard</Link>
-          </p>
+          </p> */}
           <p className="text-gray-400 hover:text-white">
             <Link href="/quiz">Quiz</Link>
           </p>

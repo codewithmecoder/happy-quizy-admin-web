@@ -48,6 +48,7 @@ const initialTypeQuestion: TypeQuestionModel = {
   id: 0,
   type: '',
   photo: null,
+  photoName: null,
   questions: [],
 };
 const initialQuestion: CreateQuestionModel = {
@@ -67,6 +68,7 @@ const initQuestionModel: QuestionModel = {
     id: 0,
     type: '',
     photo: null,
+    photoName: null,
     questions: [],
     createdAt: undefined,
     updatedAt: undefined,

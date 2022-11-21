@@ -35,6 +35,7 @@ const initQuestionModel: QuestionModel = {
     id: 0,
     type: '',
     photo: null,
+    photoName: null,
     questions: [],
     createdAt: undefined,
     updatedAt: undefined,
@@ -200,11 +201,11 @@ const Quiz: NextPage<{
           type="button"
           onClick={() => Router.push('/question')}
         />
-        <PrimaryButton
+        {/* <PrimaryButton
           text="Answer Questions"
           type="button"
           onClick={() => Router.push('/answerquestion')}
-        />
+        /> */}
       </div>
       <div className="py-10">
         {isError && <p>Error fetching data</p>}
@@ -231,7 +232,7 @@ const Quiz: NextPage<{
                       <div className="w-10 h-10">
                         <Image
                           src={
-                            value.photo ??
+                            (value.photo && value.photo) ??
                             '/assets/images/no_image_available.png'
                           }
                           alt={value.type}

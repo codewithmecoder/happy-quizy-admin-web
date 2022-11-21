@@ -46,11 +46,13 @@ export const fetchOnlyTypeQuestions = (
 export const updateTypeQuestion = (typeQuestionUpdate: void) => {
   const obj: BaseObjectRequestModel<TypeQuestionUpdateModel> =
     typeQuestionUpdate as any;
+  console.log(obj);
   return axiosInstance.put(
     `/api/v1/typeQuestion/${obj.data.id}`,
     {
       type: obj.data.type,
       photo: obj.data.photo,
+      photoName: obj.data.photoName,
     },
     {
       headers: {
@@ -61,6 +63,12 @@ export const updateTypeQuestion = (typeQuestionUpdate: void) => {
   );
 };
 
-export const deleteTypeQuestion = (id: number) => {
-  return axiosInstance.delete(`/api/v1/typeQuestion/${id}`);
+export const deleteTypeQuestion = (deleteTypeQuestion: void) => {
+  const obj: BaseObjectRequestModel<{ id: number }> = deleteTypeQuestion as any;
+  return axiosInstance.delete(`/api/v1/typeQuestion/${obj.data.id}`, {
+    headers: {
+      Authorization: `Bearer ${obj.headers.accessToken}`,
+      'x-refresh': obj.headers.refreshToken,
+    },
+  });
 };

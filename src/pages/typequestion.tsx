@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { AxiosError } from 'axios';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
@@ -15,6 +21,7 @@ import Modal from '../components/Modal';
 import MyHead from '../components/MyHead';
 import PrimaryButton from '../components/PrimaryButton';
 import { BaseResponse } from '../models/baseResponse.model';
+import { MessageResponseModel } from '../models/messageResponse.model';
 import { TypeQuestionModel } from '../models/typeQuestion.model';
 import {
   createTypeQuestion,
@@ -29,16 +36,27 @@ import { storage } from '../utils/firebase.config';
 export interface TypeQuestionValues {
   type: string | null;
   photo: null | string;
+  photoName?: null | string;
 }
+
+const typeQuestionInit: TypeQuestionModel = {
+  id: 0,
+  type: '',
+  photo: null,
+  questions: [],
+  photoName: null,
+};
 
 const TypeQuestion: NextPage<{
   headers: Partial<{
     [key: string]: string;
   }>;
 }> = ({ headers }) => {
-  const [deleteModalData, setDeleteModalData] = useState<TypeQuestionModel>();
+  const [deleteModalData, setDeleteModalData] =
+    useState<TypeQuestionModel>(typeQuestionInit);
   const [photo, setPhoto] = useState<FileList | null>();
-  const [updateId, setUpdateId] = useState<number>(0);
+  const [updateObj, setUpdateObj] =
+    useState<TypeQuestionModel>(typeQuestionInit);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const photoRef = useRef<HTMLInputElement>(null);
   const [typeQuestionValues, setTypeQuestionValues] =
@@ -47,6 +65,7 @@ const TypeQuestion: NextPage<{
     photo: null,
     type: null,
   });
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const mutation = useMutation(createTypeQuestion, {
     onSuccess: () => {
@@ -56,10 +75,45 @@ const TypeQuestion: NextPage<{
   });
 
   const mutationUpdate = useMutation(updateTypeQuestion, {
-    onSuccess: () => {
-      setUpdateId(0);
-      setTypeQuestionValues({ ...typeQuestionValues, type: '', photo: null });
-      refetch();
+    onSuccess: async ({ data }) => {
+      if (data.success) {
+        if (
+          data?.data?.photoName &&
+          data?.data?.photoName != typeQuestionValues.photoName
+        ) {
+          await deleteFileFromFirebase(updateObj.photoName);
+        }
+
+        setUpdateObj(typeQuestionInit);
+        setTypeQuestionValues({
+          ...typeQuestionValues,
+          type: '',
+          photo: null,
+          photoName: null,
+        });
+        refetch();
+      }
+    },
+    onError: () => {
+      console.log('could mot update');
+    },
+  });
+
+  const mutationDelete = useMutation(deleteTypeQuestion, {
+    onSuccess: async ({ data }) => {
+      const messageResponse = data as BaseResponse<MessageResponseModel>;
+      if (!messageResponse.success) {
+        setDeleteError(messageResponse.data.message);
+      } else {
+        await deleteFileFromFirebase(deleteModalData.photoName);
+        setDeleteModalData(typeQuestionInit);
+        refetch();
+        setShowDeleteModal(false);
+        setDeleteError(null);
+      }
+    },
+    onError: (error: AxiosError) => {
+      setDeleteError(error.message);
     },
   });
 
@@ -93,20 +147,23 @@ const TypeQuestion: NextPage<{
       errorCount = 0;
       return;
     }
-    const photoUrl = await uploadFile(photo);
-    updateId > 0
+    const file = await uploadFile(photo);
+    console.log(file);
+    updateObj.id > 0
       ? mutationUpdate.mutate({
           data: {
             ...typeQuestionValues,
-            photo: photoUrl ? photoUrl : typeQuestionValues.photo,
-            id: updateId,
+            photo: file?.url ? file?.url : typeQuestionValues.photo,
+            photoName: file?.name,
+            id: updateObj.id,
           },
           headers,
         } as any)
       : mutation.mutate({
           data: {
             ...typeQuestionValues,
-            photo: photoUrl,
+            photo: file?.url,
+            photoName: file?.name,
           },
           headers,
         } as any);
@@ -116,13 +173,27 @@ const TypeQuestion: NextPage<{
     async () => await fetchOnlyTypeQuestions(headers)
   );
 
-  const uploadFile = async (imageUpload: FileList | null | undefined) => {
+  const uploadFile = async (
+    imageUpload: FileList | null | undefined
+  ): Promise<{ url: string; name: string } | null> => {
     if (!imageUpload) return null;
     const file = imageUpload.item(0);
     const imageRef = ref(storage, `images/${file?.name + v4()}`);
     const snapshot = await uploadBytes(imageRef, file!);
     const url = await getDownloadURL(snapshot.ref);
-    return url;
+    return { url, name: snapshot?.metadata?.name };
+  };
+
+  const deleteFileFromFirebase = async (url: string | null) => {
+    if (!url) return;
+    const fileRef = ref(storage, `images/${url}`);
+    await deleteObject(fileRef);
+  };
+
+  const onCloseDeleteModal = () => {
+    setUpdateObj(typeQuestionInit);
+    setDeleteError(null);
+    setShowDeleteModal(false);
   };
 
   return (
@@ -187,8 +258,12 @@ const TypeQuestion: NextPage<{
         <div className="flex items-center justify-center w-full mt-5">
           <PrimaryButton
             type="submit"
-            text={updateId > 0 ? 'Update Type Question' : 'Add Type Question'}
-            isLoading={mutation.isLoading}
+            text={
+              updateObj.id > 0 ? 'Update Type Question' : 'Add Type Question'
+            }
+            isLoading={
+              updateObj.id > 0 ? mutationUpdate.isLoading : mutation.isLoading
+            }
           />
         </div>
       </form>
@@ -218,8 +293,9 @@ const TypeQuestion: NextPage<{
                       <div className="w-10 h-10">
                         <Image
                           src={
-                            typeQ.photo ??
-                            '/assets/images/no_image_available.png'
+                            typeQ.photo && typeQ.photo !== ''
+                              ? typeQ.photo
+                              : '/assets/images/no_image_available.png'
                           }
                           alt={typeQ.type}
                           className="w-full h-full rounded-full shadow-md"
@@ -246,11 +322,12 @@ const TypeQuestion: NextPage<{
                       />
                       <BiEdit
                         onClick={() => {
-                          setUpdateId(typeQ.id);
+                          setUpdateObj(typeQ);
                           setTypeQuestionValues({
                             ...typeQuestionValues,
                             type: typeQ.type,
                             photo: typeQ.photo,
+                            photoName: typeQ.photoName,
                           });
                         }}
                         className="w-7 h-7 text-yellow-500 cursor-pointer"
@@ -274,28 +351,37 @@ const TypeQuestion: NextPage<{
                 Are you sure want to delete {`"${deleteModalData?.type}"`}
               </p>
             </div>
+            {deleteError && (
+              <div className="my-2 px-2">
+                <li className="text-red-500">{deleteError}</li>
+              </div>
+            )}
+
             <div className="flex gap-5 px-4">
               <PrimaryButton
                 text="No"
                 type="button"
-                onClick={() => setShowDeleteModal(false)}
+                onClick={onCloseDeleteModal}
               />
               <DangerButton
                 text="Yes"
                 type="button"
                 onClick={() => {
-                  deleteTypeQuestion(deleteModalData?.id ?? 0);
-                  refetch();
-                  setShowDeleteModal(false);
+                  mutationDelete.mutate({
+                    data: { id: deleteModalData?.id },
+                    headers,
+                  } as any);
                 }}
+                isLoading={mutationDelete.isLoading}
               />
             </div>
           </>
         }
         visible={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        height="12%"
-        width="40%"
+        onClose={onCloseDeleteModal}
+        height="auto"
+        width="auto"
+        padding="10px"
       />
     </div>
   );
