@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
@@ -75,7 +75,11 @@ const initQuestionModel: QuestionModel = {
   updatedAt: undefined,
   typeQuestionId: 0,
 };
-const Question = () => {
+const Question: NextPage<{
+  headers: Partial<{
+    [key: string]: string;
+  }>;
+}> = ({ headers }) => {
   const [typeQuestionModal, setTypeQuestionModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteModalData, setDeleteModalData] =
@@ -191,7 +195,7 @@ const Question = () => {
 
   const tqQuery = useQuery(
     [Constants.queries.onlyTypeQuestion],
-    fetchOnlyTypeQuestions
+    async () => await fetchOnlyTypeQuestions(headers)
   );
 
   return (
@@ -448,5 +452,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  return { props: { userData: data, cookie: context.req.headers.cookies } };
+  return { props: { userData: data, headers: context.req.cookies } };
 };

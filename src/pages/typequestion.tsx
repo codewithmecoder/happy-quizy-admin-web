@@ -49,7 +49,7 @@ const TypeQuestion: NextPage<{
   });
 
   const mutation = useMutation(createTypeQuestion, {
-    onSuccess: (e) => {
+    onSuccess: () => {
       setTypeQuestionValues({ ...typeQuestionValues, type: '', photo: null });
       refetch();
     },
