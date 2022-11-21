@@ -267,7 +267,11 @@ const Question: NextPage<{
             text={
               updateQuestionValue.id > 0 ? 'Update Question' : 'Add Question'
             }
-            isLoading={mutation.isLoading}
+            isLoading={
+              updateQuestionValue.id > 0
+                ? updateMutation.isLoading
+                : mutation.isLoading
+            }
           />
         </div>
       </form>
