@@ -105,7 +105,8 @@ const Question: NextPage<{
     onSuccess: async (data) => {
       const question = data.data?.data;
       let qQuery = await getQuestionByTypeQuestion(
-        question?.typeQuestionId ?? 0
+        question?.typeQuestionId ?? 0,
+        headers
       );
       setQuestionData(qQuery);
       const select: any = document.getElementById('selectTypeQuestion');
@@ -124,7 +125,8 @@ const Question: NextPage<{
   const deleteMutation = useMutation(deleteQuestion, {
     onSuccess: async () => {
       let qQuery = await getQuestionByTypeQuestion(
-        deleteModalData.typeQuestionId
+        deleteModalData.typeQuestionId,
+        headers
       );
       setQuestionData(qQuery);
       setQuestionValues(initialQuestion);
@@ -148,7 +150,8 @@ const Question: NextPage<{
     onSuccess: async (data) => {
       const question = data.data?.data;
       let qQuery = await getQuestionByTypeQuestion(
-        question?.typeQuestionId ?? 0
+        question?.typeQuestionId ?? 0,
+        headers
       );
       setQuestionData(qQuery);
       setUpdateQuestionValue(initUpdateTypeQuestion);
@@ -159,14 +162,20 @@ const Question: NextPage<{
       setError(e.message);
     },
   });
-
+  let validateErrorCount: number = 0;
   const validate = (value: CreateQuestionModel) => {
     const error: TypeQuestionError = {
       content: null,
       typeQuestion: null,
     };
-    if (!value.content) error.content = 'Name Question cannot be empty!';
-    if (value.typeQuestionId <= 0) error.typeQuestion = 'Please type question!';
+    if (!value.content) {
+      error.content = 'Name Question cannot be empty!';
+      validateErrorCount++;
+    }
+    if (value.typeQuestionId <= 0) {
+      error.typeQuestion = 'Please type question!';
+      validateErrorCount++;
+    }
     return error;
   };
   const onchangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -183,15 +192,24 @@ const Question: NextPage<{
     e.preventDefault();
     if (updateQuestionValue.id > 0) {
       setErrorObject(validate(updateQuestionValue));
-      if (errorObject.content || errorObject.typeQuestion) return;
+      if (validateErrorCount > 0) {
+        validateErrorCount = 0;
+        return;
+      }
       const { content, typeQuestionId, id } = updateQuestionValue;
-      updateMutation.mutate({ content, typeQuestionId, id } as any);
+      updateMutation.mutate({
+        data: { content, typeQuestionId, id },
+        headers,
+      } as any);
     } else {
       questionValues.typeQuestionId = typeQuestion.id;
       setErrorObject(validate(questionValues));
-      if (errorObject.content || errorObject.typeQuestion) return;
+      if (validateErrorCount > 0) {
+        validateErrorCount = 0;
+        return;
+      }
       const { content, typeQuestionId } = questionValues;
-      mutation.mutate({ content, typeQuestionId } as any);
+      mutation.mutate({ data: { content, typeQuestionId }, headers } as any);
     }
   };
 
@@ -277,7 +295,8 @@ const Question: NextPage<{
           className="my-2 w-full form-control block px-3 py-1.5 text-base font-normal text-gray-900 bg-slate-300 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-900 focus:bg-white focus:outline-none"
           onChange={async (e) => {
             let qQuery = await getQuestionByTypeQuestion(
-              parseInt(e.target.value)
+              parseInt(e.target.value),
+              headers
             );
             setQuestionData(qQuery);
           }}
@@ -308,7 +327,7 @@ const Question: NextPage<{
               </tr>
             </thead>
             <tbody>
-              {questionData.map((question, index) => (
+              {questionData?.map((question, index) => (
                 <tr key={question.id}>
                   <td className="w-[40px]">{index + 1}.</td>
                   <td className="break-words w-[300px]">{question.content}</td>
@@ -444,7 +463,7 @@ const Question: NextPage<{
 export default Question;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = await fetcher<BaseResponse<object>>(`/api/v1/user`, {
-    cookie: context.req.headers.cookies,
+    cookie: context.req.headers.cookie,
   });
   if (!data?.success) {
     return {
