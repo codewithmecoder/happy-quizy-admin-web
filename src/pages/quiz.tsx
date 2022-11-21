@@ -103,6 +103,7 @@ const Quiz: NextPage<{
       setUpdateAnswer(initCreateAnswerValues);
       setCreateAsnwerError(null);
       refetch();
+      setShowCreateAnswerModal(false);
     },
     onError: (e: AxiosError) => {
       if (e.code === 'ERR_NETWORK') {
@@ -137,10 +138,8 @@ const Quiz: NextPage<{
     if (updateAnswer.id > 0) {
       updateAnswerMutation.mutate({
         data: updateAnswer,
-        headers: headers,
+        headers,
       } as any);
-      setUpdateAnswer(initCreateAnswerValues);
-      setShowCreateAnswerModal(false);
     } else {
       createAnswerValues.questionId = question.id;
       createAnswerValues.typeQuestionId = question.typeQuestionId;
@@ -372,7 +371,11 @@ const Quiz: NextPage<{
                   text={
                     updateAnswer.id > 0 ? 'Update Question' : 'Add Question'
                   }
-                  isLoading={createAnswerMutation.isLoading}
+                  isLoading={
+                    updateAnswer.id > 0
+                      ? updateAnswerMutation.isLoading
+                      : createAnswerMutation.isLoading
+                  }
                 />
               </div>
             </form>
@@ -410,7 +413,10 @@ const Quiz: NextPage<{
                 text="Yes"
                 type="button"
                 onClick={() => {
-                  deleteAnswerMutation.mutate(answerDeleteModalData.id as any);
+                  deleteAnswerMutation.mutate({
+                    data: { id: answerDeleteModalData.id },
+                    headers,
+                  } as any);
                 }}
               />
             </div>

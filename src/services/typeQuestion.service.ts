@@ -46,7 +46,6 @@ export const fetchOnlyTypeQuestions = (
 export const updateTypeQuestion = (typeQuestionUpdate: void) => {
   const obj: BaseObjectRequestModel<TypeQuestionUpdateModel> =
     typeQuestionUpdate as any;
-  console.log(obj);
   return axiosInstance.put(
     `/api/v1/typeQuestion/${obj.data.id}`,
     {

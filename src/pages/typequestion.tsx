@@ -94,9 +94,6 @@ const TypeQuestion: NextPage<{
         refetch();
       }
     },
-    onError: () => {
-      console.log('could mot update');
-    },
   });
 
   const mutationDelete = useMutation(deleteTypeQuestion, {
@@ -148,7 +145,6 @@ const TypeQuestion: NextPage<{
       return;
     }
     const file = await uploadFile(photo);
-    console.log(file);
     updateObj.id > 0
       ? mutationUpdate.mutate({
           data: {

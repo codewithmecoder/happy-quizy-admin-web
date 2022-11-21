@@ -1,3 +1,4 @@
+import { AnswerQuestionModel } from '../models/answerQuestion.model';
 import { BaseObjectRequestModel } from '../models/baseObjectRequest.model';
 import { axiosInstance } from '../utils/axiosBase';
 
@@ -11,13 +12,34 @@ export const createAnswer = (newAnswer: void) => {
   return axiosInstance.post(
     '/api/v1/asnwerQuestion/createSingleAnswer',
     obj.data,
-    { Authorization: `${obj.headers.accessToken}` } as any
+    {
+      headers: {
+        Authorization: `${obj.headers.accessToken}`,
+        'x-refresh': obj.headers.refreshToken,
+      },
+    }
   );
 };
 export const updateAnswer = (answer: void) => {
-  return axiosInstance.put('/api/v1/asnwerQuestion/updateSingleAnswer', answer);
+  const obj: BaseObjectRequestModel<AnswerQuestionModel> = answer as any;
+  return axiosInstance.put(
+    '/api/v1/asnwerQuestion/updateSingleAnswer',
+    obj.data,
+    {
+      headers: {
+        Authorization: `${obj.headers.accessToken}`,
+        'x-refresh': obj.headers.refreshToken,
+      },
+    }
+  );
 };
 
-export const deleteAnswer = (id: void) => {
-  return axiosInstance.delete(`/api/v1/asnwerQuestion/${id}`);
+export const deleteAnswer = (deleteAns: void) => {
+  const obj: BaseObjectRequestModel<{ id: number }> = deleteAns as any;
+  return axiosInstance.delete(`/api/v1/asnwerQuestion/${obj.data.id}`, {
+    headers: {
+      Authorization: `${obj.headers.accessToken}`,
+      'x-refresh': obj.headers.refreshToken,
+    },
+  });
 };
